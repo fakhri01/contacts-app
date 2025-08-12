@@ -1,5 +1,7 @@
+import 'package:contacts/screens/add_new_contact.dart';
 import 'package:contacts/screens/contact_details_screen.dart';
 import 'package:contacts/screens/contacts_screen.dart';
+import 'package:contacts/screens/edit_contact_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,8 +18,10 @@ class MyApp extends StatelessWidget {
       title: 'Contacts App',
       initialRoute: '/',
       routes: {
-        '/': (context) => ContactsPage(),
-        '/contact_details_page': (context) => ContactDetailsPage(),
+        '/': (context) => ContactsScreen(),
+        '/contact_details_page': (context) => ContactDetailsScreen(),
+        '/edit_contact': (context) => EditContactScreen(),
+        '/add_new_contact': (context) => AddNewContactScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

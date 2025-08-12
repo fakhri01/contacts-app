@@ -3,14 +3,14 @@ import 'package:contacts/widgets/action_button.dart';
 import 'package:contacts/widgets/contact_info_card.dart';
 import 'package:flutter/material.dart';
 
-class ContactDetailsPage extends StatefulWidget {
-  const ContactDetailsPage({super.key});
+class ContactDetailsScreen extends StatefulWidget {
+  const ContactDetailsScreen({super.key});
 
   @override
-  State<ContactDetailsPage> createState() => _ContactDetailsPageState();
+  State<ContactDetailsScreen> createState() => _ContactDetailsScreenState();
 }
 
-class _ContactDetailsPageState extends State<ContactDetailsPage> {
+class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

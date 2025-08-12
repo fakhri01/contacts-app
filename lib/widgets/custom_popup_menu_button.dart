@@ -9,9 +9,7 @@ class CustomPopupMenuButton extends StatelessWidget {
   void onActionSelected(BuildContext context, MenuAction action) {
     switch (action) {
       case MenuAction.edit:
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Edit button tapped!')));
+        Navigator.pushNamed(context, '/edit_contact');
         break;
       case MenuAction.delete:
         ScaffoldMessenger.of(
