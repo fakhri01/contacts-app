@@ -3,7 +3,18 @@ import 'package:contacts/widgets/custom_popup_menu_button.dart';
 import 'package:flutter/material.dart';
 
 class ContactItem extends StatelessWidget {
-  const ContactItem({super.key});
+  final int id;
+  final String? fullName;
+  final String? mail;
+  final int? phone;
+
+  const ContactItem({
+    super.key,
+    required this.id,
+    required this.fullName,
+    required this.mail,
+    required this.phone,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +43,7 @@ class ContactItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "John Doe",
+                fullName!,
                 style: TextStyle(
                   color: textPrimary,
                   fontSize: 18,
@@ -41,7 +52,7 @@ class ContactItem extends StatelessWidget {
                 ),
               ),
               Text(
-                "+12345-678-90-11",
+                phone.toString(),
                 style: TextStyle(
                   color: textSecondary,
                   fontSize: 15,

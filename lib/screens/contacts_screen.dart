@@ -1,19 +1,23 @@
+import 'package:contacts/providers/contacts_provider.dart';
 import 'package:contacts/util/constants.dart';
 import 'package:contacts/widgets/contact_item.dart';
 import 'package:contacts/widgets/create_new_contact.dart';
 import 'package:contacts/widgets/search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ContactsScreen extends StatefulWidget {
+class ContactsScreen extends ConsumerStatefulWidget {
   const ContactsScreen({super.key});
 
   @override
-  State<ContactsScreen> createState() => _ContactsScreenState();
+  ConsumerState<ContactsScreen> createState() => _ContactsScreenState();
 }
 
-class _ContactsScreenState extends State<ContactsScreen> {
+class _ContactsScreenState extends ConsumerState<ContactsScreen> {
   @override
   Widget build(BuildContext context) {
+    final allContacs = ref.watch(contactsProvider);
+
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -25,29 +29,27 @@ class _ContactsScreenState extends State<ContactsScreen> {
         ),
         backgroundColor: primaryColor,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          spacing: 12,
-          children: [
-            Search(),
-            SizedBox(height: 5),
-            CreateNewContact(),
-            SizedBox(height: 5),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-            ContactItem(),
-          ],
-        ),
+      body: Column(
+        spacing: 12,
+        children: [
+          Search(),
+          SizedBox(height: 5),
+          CreateNewContact(),
+          SizedBox(height: 5),
+          Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              itemCount: allContacs.length,
+              itemBuilder: (context, index) => ContactItem(
+                id: allContacs[index].id,
+                fullName: allContacs[index].name,
+                mail: allContacs[index].email,
+                phone: allContacs[index].number,
+              ),
+              separatorBuilder: (context, index) => SizedBox(height: 12),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Container(
         width: 50,
