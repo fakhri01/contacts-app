@@ -2,10 +2,9 @@ import 'package:contacts/util/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContactInfoCard extends StatelessWidget {
+  final String? title;
+  final String? label;
   const ContactInfoCard({super.key, required this.title, required this.label});
-
-  final String title;
-  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class ContactInfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            title!,
             style: TextStyle(
               color: textSecondary,
               fontFamily: fontFamily,
@@ -29,7 +28,7 @@ class ContactInfoCard extends StatelessWidget {
             ),
           ),
           Text(
-            label,
+            label!,
             style: TextStyle(
               color: textPrimary,
               fontFamily: fontFamily,

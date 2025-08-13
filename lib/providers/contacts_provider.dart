@@ -95,3 +95,18 @@ final List<ContactsModel> contactsList = [
 ];
 
 final contactsProvider = Provider((ref) => contactsList);
+
+final contactFinderProvider = Provider.family<ContactsModel?, int>((
+  ref,
+  contactId,
+) {
+  final contacts = ref.watch(contactsProvider);
+
+  for (final contact in contacts) {
+    if (contact.id == contactId) {
+      return contact;
+    }
+  }
+
+  return null;
+});

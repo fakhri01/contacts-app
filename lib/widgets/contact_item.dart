@@ -19,7 +19,8 @@ class ContactItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/contact_details_page'),
+      onTap: () =>
+          Navigator.pushNamed(context, '/contact_details_page', arguments: id),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +34,7 @@ class ContactItem extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                'J',
+                fullName![0],
                 style: TextStyle(color: textPrimary, fontSize: 20),
               ),
             ),

@@ -1,5 +1,5 @@
 import 'package:contacts/util/constants.dart';
-import 'package:contacts/widgets/PhoneNumberInput.dart';
+import 'package:contacts/widgets/phone_number_input.dart';
 import 'package:flutter/material.dart';
 
 class AddEditForm extends StatefulWidget {
