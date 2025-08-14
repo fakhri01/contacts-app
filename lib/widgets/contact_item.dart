@@ -64,7 +64,7 @@ class ContactItem extends StatelessWidget {
             ],
           ),
           Spacer(),
-          CustomPopupMenuButton(),
+          CustomPopupMenuButton(id: id),
         ],
       ),
     );

@@ -1,29 +1,38 @@
+import 'package:contacts/widgets/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/util/constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum MenuAction { edit, delete }
 
-class CustomPopupMenuButton extends StatelessWidget {
-  const CustomPopupMenuButton({super.key});
+class CustomPopupMenuButton extends ConsumerWidget {
+  final int id;
 
-  void onActionSelected(BuildContext context, MenuAction action) {
+  const CustomPopupMenuButton({super.key, required this.id});
+
+  void onActionSelected(
+    BuildContext context,
+    MenuAction action,
+    WidgetRef ref,
+  ) {
     switch (action) {
       case MenuAction.edit:
         Navigator.pushNamed(context, '/edit_contact');
         break;
       case MenuAction.delete:
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Delete button tapped!')));
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialogWidget(id: id),
+        );
         break;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<MenuAction>(
       onSelected: (MenuAction action) {
-        onActionSelected(context, action);
+        onActionSelected(context, action, ref);
       },
       color: backgroundColor,
       itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuAction>>[

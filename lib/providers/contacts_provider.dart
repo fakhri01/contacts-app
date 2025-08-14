@@ -94,7 +94,18 @@ final List<ContactsModel> contactsList = [
   ),
 ];
 
-final contactsProvider = Provider((ref) => contactsList);
+class ContactsNotifier extends StateNotifier<List<ContactsModel>> {
+  ContactsNotifier() : super(contactsList);
+
+  void deleteContact(int id) {
+    state = state.where((element) => element.id != id).toList();
+  }
+}
+
+final contactsProvider =
+    StateNotifierProvider<ContactsNotifier, List<ContactsModel>>(
+      (ref) => ContactsNotifier(),
+    );
 
 final contactFinderProvider = Provider.family<ContactsModel?, int>((
   ref,
