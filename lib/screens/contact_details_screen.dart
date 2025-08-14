@@ -20,6 +20,7 @@ class ContactDetailsScreen extends ConsumerWidget {
             "Contact Details",
             style: TextStyle(color: textPrimary, fontFamily: fontFamily),
           ),
+
           backgroundColor: primaryColor,
         ),
         body: Center(
@@ -36,7 +37,25 @@ class ContactDetailsScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('contact detail')),
+      appBar: AppBar(
+        title: Text(
+          'Contact detail',
+          style: TextStyle(color: textPrimary, fontFamily: fontFamily),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            color: textPrimary,
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/add_edit_contact',
+                arguments: contactId,
+              );
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
