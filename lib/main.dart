@@ -1,7 +1,6 @@
-import 'package:contacts/screens/add_new_contact.dart';
+import 'package:contacts/screens/add_edit_contact.dart';
 import 'package:contacts/screens/contact_details_screen.dart';
 import 'package:contacts/screens/contacts_screen.dart';
-import 'package:contacts/screens/edit_contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,8 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => ContactsScreen(),
         '/contact_details_page': (context) => ContactDetailsScreen(),
-        '/edit_contact': (context) => EditContactScreen(),
-        '/add_new_contact': (context) => AddNewContactScreen(),
+        '/add_edit_contact': (context) => AddEditContactScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

@@ -2,7 +2,7 @@ class ContactsModel {
   final int id;
   final String? name;
   final String? email;
-  final int? number;
+  final String? number;
 
   ContactsModel({
     required this.id,

@@ -7,7 +7,7 @@ class CreateNewContact extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/add_new_contact'),
+      onTap: () => Navigator.pushNamed(context, '/add_edit_contact'),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

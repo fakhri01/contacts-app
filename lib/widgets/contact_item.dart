@@ -6,7 +6,7 @@ class ContactItem extends StatelessWidget {
   final int id;
   final String? fullName;
   final String? mail;
-  final int? phone;
+  final String? phone;
 
   const ContactItem({
     super.key,

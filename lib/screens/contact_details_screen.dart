@@ -11,7 +11,7 @@ class ContactDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contactId = ModalRoute.of(context)!.settings.arguments as int;
-    final contact = ref.watch(contactFinderProvider(contactId));
+    final contact = ref.watch(contactDetailFinderProvider(contactId));
 
     if (contact == null) {
       return Scaffold(

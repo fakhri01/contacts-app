@@ -20,13 +20,27 @@ class AlertDialogWidget extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          child: Text("No"),
+          child: Text(
+            "No",
+            style: TextStyle(
+              color: textPrimary,
+              fontFamily: fontFamily,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         TextButton(
-          child: Text("Yes"),
+          child: Text(
+            "Yes",
+            style: TextStyle(
+              color: textPrimary,
+              fontFamily: fontFamily,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           onPressed: () {
             ref.read(contactsProvider.notifier).deleteContact(id);
             Navigator.pop(context);

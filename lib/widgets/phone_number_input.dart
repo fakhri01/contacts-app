@@ -3,7 +3,9 @@ import 'package:contacts/util/constants.dart';
 import 'package:flutter/material.dart';
 
 class PhoneNumberInput extends StatefulWidget {
-  const PhoneNumberInput({super.key});
+  final String? number;
+  final ValueChanged<String?> onSave;
+  const PhoneNumberInput({super.key, this.number, required this.onSave});
 
   @override
   State<PhoneNumberInput> createState() => _PhoneNumberInputState();
@@ -62,10 +64,18 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
           Expanded(
             child: TextFormField(
               keyboardType: TextInputType.phone,
+              initialValue: widget.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter a valid number";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 labelText: 'Enter number',
                 border: InputBorder.none,
               ),
+              onSaved: widget.onSave,
             ),
           ),
         ],

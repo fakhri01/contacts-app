@@ -17,7 +17,7 @@ class CustomPopupMenuButton extends ConsumerWidget {
   ) {
     switch (action) {
       case MenuAction.edit:
-        Navigator.pushNamed(context, '/edit_contact');
+        Navigator.pushNamed(context, '/add_edit_contact', arguments: id);
         break;
       case MenuAction.delete:
         showDialog(
