@@ -95,7 +95,11 @@ final List<ContactsModel> contactsList = [
 ];
 
 class ContactsNotifier extends StateNotifier<List<ContactsModel>> {
-  ContactsNotifier() : super(contactsList);
+  ContactsNotifier()
+    : super(
+        List.from(contactsList)
+          ..sort((a, b) => (a.name ?? '').compareTo(b.name ?? '')),
+      );
 
   void addContact(ContactsModel newContact) {
     final newId = state.isEmpty
@@ -107,14 +111,19 @@ class ContactsNotifier extends StateNotifier<List<ContactsModel>> {
       email: newContact.email,
       number: newContact.number,
     );
-    state = [...state, contactWithId];
+
+    final updatedList = [...state, contactWithId];
+    updatedList.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+    state = updatedList;
   }
 
   void editContact(ContactsModel editContact) {
-    state = [
+    final updatedList = [
       for (final contact in state)
         if (contact.id == editContact.id) editContact else contact,
     ];
+    updatedList.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+    state = updatedList;
   }
 
   void deleteContact(int id) {
@@ -126,6 +135,28 @@ final contactsProvider =
     StateNotifierProvider<ContactsNotifier, List<ContactsModel>>(
       (ref) => ContactsNotifier(),
     );
+
+final searchQueryProvider = StateProvider<String>((ref) => '');
+
+final filteredContactsProvider = Provider<List<ContactsModel>>((ref) {
+  final contacts = ref.watch(contactsProvider);
+  final searchQuery = ref.watch(searchQueryProvider);
+
+  if (searchQuery.isEmpty) {
+    final sortedList = List<ContactsModel>.from(contacts);
+    sortedList.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+    return sortedList;
+  } else {
+    final filteredList = contacts.where((contact) {
+      final nameLower = (contact.name ?? '').toLowerCase();
+      final number = contact.number ?? '';
+      final queryLower = searchQuery.toLowerCase();
+      return nameLower.contains(queryLower) || number.contains(queryLower);
+    }).toList();
+    filteredList.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+    return filteredList;
+  }
+});
 
 final contactDetailFinderProvider = Provider.family<ContactsModel?, int>((
   ref,

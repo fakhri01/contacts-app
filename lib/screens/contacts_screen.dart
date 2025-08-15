@@ -16,7 +16,7 @@ class ContactsScreen extends ConsumerStatefulWidget {
 class _ContactsScreenState extends ConsumerState<ContactsScreen> {
   @override
   Widget build(BuildContext context) {
-    final allContacs = ref.watch(contactsProvider);
+    final allContacs = ref.watch(filteredContactsProvider);
 
     return Scaffold(
       backgroundColor: backgroundColor,
