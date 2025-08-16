@@ -1,6 +1,7 @@
 import 'package:contacts/screens/add_edit_contact.dart';
 import 'package:contacts/screens/contact_details_screen.dart';
 import 'package:contacts/screens/contacts_screen.dart';
+import 'package:contacts/screens/dialer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => ContactsScreen(),
         '/contact_details_page': (context) => ContactDetailsScreen(),
         '/add_edit_contact': (context) => AddEditContactScreen(),
+        '/dialer': (context) => DialerScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

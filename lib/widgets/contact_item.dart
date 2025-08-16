@@ -1,6 +1,7 @@
 import 'package:contacts/util/constants.dart';
 import 'package:contacts/widgets/custom_popup_menu_button.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class ContactItem extends StatelessWidget {
   final int id;
@@ -15,6 +16,18 @@ class ContactItem extends StatelessWidget {
     required this.mail,
     required this.phone,
   });
+
+  String formatPhoneNumber(String? phone) {
+    if (phone == null || phone.isEmpty) {
+      return '';
+    }
+    final maskFormmatter = MaskTextInputFormatter(
+      mask: '###-###-####',
+      filter: {"#": RegExp(r'[0-9]')},
+    );
+
+    return maskFormmatter.maskText(phone);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +66,7 @@ class ContactItem extends StatelessWidget {
                 ),
               ),
               Text(
-                phone.toString(),
+                formatPhoneNumber(phone),
                 style: TextStyle(
                   color: textSecondary,
                   fontSize: 15,

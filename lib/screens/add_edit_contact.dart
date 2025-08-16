@@ -21,6 +21,8 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
   String? _name;
   String? _email;
   String? _number;
+  String? _flag;
+  String? _countryCode;
 
   @override
   void didChangeDependencies() {
@@ -33,6 +35,8 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
         _name = _editingContact!.name;
         _email = _editingContact!.email;
         _number = _editingContact!.number;
+        _flag = _editingContact!.flag;
+        _countryCode = _editingContact!.countryCode;
       }
     }
   }
@@ -47,6 +51,8 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
           name: _name ?? '',
           email: _email ?? '',
           number: _number ?? '',
+          flag: _flag ?? '',
+          countryCode: _countryCode ?? '',
         );
         notifier.editContact(updatedContact);
       } else {
@@ -55,6 +61,8 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
           name: _name ?? '',
           email: _email ?? '',
           number: _number ?? '',
+          flag: _flag ?? '',
+          countryCode: _countryCode ?? '',
         );
         notifier.addContact(newContact);
       }
@@ -124,9 +132,14 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
                 initialName: _name,
                 initialEmail: _email,
                 initialNumber: _number,
+                initialCountryCode: _countryCode,
                 onNameSaved: (value) => _name = value ?? '',
                 onEmailSaved: (value) => _email = value ?? '',
-                onNumberSaved: (value) => _number = value ?? '',
+                onNumberSaved: (result) {
+                  _number = result.number;
+                  _flag = result.country?.flag ?? '';
+                  _countryCode = result.country?.code ?? '';
+                },
               ),
             ],
           ),

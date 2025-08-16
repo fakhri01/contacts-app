@@ -61,7 +61,7 @@ class _ContactsScreenState extends ConsumerState<ContactsScreen> {
         child: IconButton(
           color: textPrimary,
           icon: Icon(Icons.dialpad_outlined),
-          onPressed: () => Navigator.pushNamed(context, '/add_edit_contact'),
+          onPressed: () => Navigator.pushNamed(context, '/dialer'),
         ),
       ),
     );
