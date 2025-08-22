@@ -6,12 +6,14 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 class PhoneNumberInput extends StatefulWidget {
   final String? number;
   final String? initialCountryCode;
+  final String? initialFlag;
   final ValueChanged<({String? number, CountryModel? country})> onSave;
 
   const PhoneNumberInput({
     super.key,
     this.number,
     this.initialCountryCode,
+    this.initialFlag,
     required this.onSave,
   });
 
@@ -31,7 +33,9 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
   void initState() {
     super.initState();
     selectedCountry = countries.firstWhere(
-      (country) => country.code == widget.initialCountryCode,
+      (country) =>
+          country.code == widget.initialCountryCode &&
+          country.flag == widget.initialFlag,
       orElse: () => countries.firstWhere((c) => c.code == '+1'),
     );
 
@@ -74,6 +78,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
         borderRadius: BorderRadius.circular(5),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           DropdownButtonHideUnderline(
             child: DropdownButton<CountryModel>(
@@ -130,10 +135,11 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                 border: InputBorder.none,
               ),
               onSaved: (value) {
-                widget.onSave((
-                  number: _maskFormatter.getUnmaskedText(),
-                  country: selectedCountry,
-                ));
+                final rawText = numberController.text.replaceAll(
+                  RegExp(r'[^0-9]'),
+                  '',
+                );
+                widget.onSave((number: rawText, country: selectedCountry));
               },
             ),
           ),

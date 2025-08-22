@@ -1,65 +1,104 @@
+import 'package:contacts/models/contacts_model.dart';
 import 'package:contacts/models/country_model.dart';
+import 'package:contacts/providers/contacts_provider.dart';
 import 'package:contacts/util/constants.dart';
 import 'package:contacts/widgets/phone_number_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddEditForm extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-
-  final String? initialName;
-  final String? initialEmail;
-  final String? initialNumber;
-  final String? initialFlag;
-  final String? initialCountryCode;
-
-  final ValueChanged<String?> onNameSaved;
-  final ValueChanged<String?> onEmailSaved;
-  final ValueChanged<({String? number, CountryModel? country})> onNumberSaved;
+class AddEditForm extends ConsumerStatefulWidget {
+  final int? contactId;
+  final VoidCallback? onSaved;
+  final void Function(VoidCallback saveFunction)? onSaveCallback;
 
   const AddEditForm({
     super.key,
-    this.initialName,
-    this.initialEmail,
-    this.initialNumber,
-    required this.onNameSaved,
-    required this.onEmailSaved,
-    required this.onNumberSaved,
-    required this.formKey,
-    this.initialFlag,
-    this.initialCountryCode,
+    this.contactId,
+    this.onSaved,
+    this.onSaveCallback,
   });
 
   @override
-  State<AddEditForm> createState() => _AddEditFormState();
+  ConsumerState<AddEditForm> createState() => _AddEditFormState();
 }
 
-class _AddEditFormState extends State<AddEditForm> {
+class _AddEditFormState extends ConsumerState<AddEditForm> {
+  final _formKey = GlobalKey<FormState>();
   CountryModel? selectedCountry;
-  String? phoneNumber;
+
+  String? _name;
+  String? _email;
+  String? _number;
+  String? _flag;
+  String? _countryCode;
 
   @override
   void initState() {
     super.initState();
-    phoneNumber = widget.initialNumber;
-    if (widget.initialCountryCode != null) {
-      selectedCountry = countries.firstWhere(
-        (country) => country.code == widget.initialCountryCode,
-        orElse: () => countries.firstWhere((c) => c.code == "+1"),
-      );
-    } else {
-      selectedCountry = countries.firstWhere((country) => country.code == '+1');
+    selectedCountry = countries.firstWhere((country) => country.code == "+1");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onSaveCallback?.call(saveForm);
+    });
+  }
+
+  void saveForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final notifier = ref.read(contactsProvider.notifier);
+
+      if (widget.contactId != null) {
+        final updatedContact = ContactsModel(
+          id: widget.contactId!,
+          name: _name ?? '',
+          email: _email ?? '',
+          number: _number ?? '',
+          flag: _flag ?? '',
+          countryCode: _countryCode ?? '',
+        );
+        notifier.editContact(updatedContact);
+      } else {
+        final newContact = ContactsModel(
+          id: 0,
+          name: _name ?? '',
+          email: _email ?? '',
+          number: _number ?? '',
+          flag: _flag ?? '',
+          countryCode: _countryCode ?? '',
+        );
+        notifier.addContact(newContact);
+      }
+      widget.onSaved?.call();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final contact = widget.contactId != null
+        ? ref.watch(contactDetailFinderProvider(widget.contactId!))
+        : null;
+    if (contact != null) {
+      final contactCountry = countries.firstWhere(
+        (country) =>
+            country.code == contact.countryCode && country.flag == contact.flag,
+        orElse: () => countries.firstWhere((c) => c.code == '+1'),
+      );
+      if (selectedCountry != contactCountry) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            selectedCountry = contactCountry;
+          });
+        });
+      }
+    }
+
     return Form(
-      key: widget.formKey,
+      key: _formKey,
       child: Column(
         spacing: 15,
         children: [
           TextFormField(
-            initialValue: widget.initialName,
+            initialValue: contact?.name,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Please enter a name";
@@ -72,23 +111,25 @@ class _AddEditFormState extends State<AddEditForm> {
               ),
               hintText: "Full Name",
             ),
-            onSaved: widget.onNameSaved,
+            onSaved: (value) => _name = value ?? '',
           ),
           PhoneNumberInput(
-            number: phoneNumber,
-            initialCountryCode: widget.initialCountryCode,
+            number: contact?.number,
+            initialFlag: contact?.flag ?? selectedCountry?.flag,
+            initialCountryCode: contact?.countryCode ?? selectedCountry?.code,
             onSave: (result) {
               setState(() {
-                phoneNumber = result.number;
+                _number = result.number;
+                _flag = result.country?.flag ?? '';
+                _countryCode = result.country?.code ?? '';
                 selectedCountry = result.country;
-                widget.onNumberSaved(result);
               });
             },
           ),
           TextFormField(
             keyboardType: TextInputType.emailAddress,
-            initialValue: widget.initialEmail,
-            onSaved: widget.onEmailSaved,
+            initialValue: contact?.email,
+            onSaved: (value) => _email = value ?? '',
             validator: (value) {
               if (value != null && value.isNotEmpty && !value.contains('@')) {
                 return "Please enter a valid email";

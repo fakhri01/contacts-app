@@ -5,6 +5,7 @@ class ContactsModel {
   final String? number;
   final String? flag;
   final String? countryCode;
+  final String? countryName;
 
   ContactsModel({
     required this.id,
@@ -13,5 +14,6 @@ class ContactsModel {
     required this.number,
     required this.flag,
     required this.countryCode,
+    this.countryName,
   });
 }

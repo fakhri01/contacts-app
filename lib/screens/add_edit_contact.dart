@@ -1,4 +1,3 @@
-import 'package:contacts/models/contacts_model.dart';
 import 'package:contacts/providers/contacts_provider.dart';
 import 'package:contacts/util/constants.dart';
 import 'package:contacts/widgets/form.dart';
@@ -11,63 +10,18 @@ class AddEditContactScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<AddEditContactScreen> createState() =>
-      _AddNewContactScreenState();
+      _AddEditContactScreenState();
 }
 
-class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
-  final _formKey = GlobalKey<FormState>();
-  ContactsModel? _editingContact;
-
-  String? _name;
-  String? _email;
-  String? _number;
-  String? _flag;
-  String? _countryCode;
+class _AddEditContactScreenState extends ConsumerState<AddEditContactScreen> {
+  int? _contactId;
+  VoidCallback? _saveFormFunction;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final contactId = ModalRoute.of(context)?.settings.arguments as int?;
-
-    if (contactId != null) {
-      _editingContact = ref.read(contactDetailFinderProvider(contactId));
-      if (_editingContact != null) {
-        _name = _editingContact!.name;
-        _email = _editingContact!.email;
-        _number = _editingContact!.number;
-        _flag = _editingContact!.flag;
-        _countryCode = _editingContact!.countryCode;
-      }
-    }
-  }
-
-  void _saveForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      final notifier = ref.read(contactsProvider.notifier);
-      if (_editingContact != null) {
-        final updatedContact = ContactsModel(
-          id: _editingContact!.id,
-          name: _name ?? '',
-          email: _email ?? '',
-          number: _number ?? '',
-          flag: _flag ?? '',
-          countryCode: _countryCode ?? '',
-        );
-        notifier.editContact(updatedContact);
-      } else {
-        final newContact = ContactsModel(
-          id: 0,
-          name: _name ?? '',
-          email: _email ?? '',
-          number: _number ?? '',
-          flag: _flag ?? '',
-          countryCode: _countryCode ?? '',
-        );
-        notifier.addContact(newContact);
-      }
-      Navigator.of(context).pop();
-    }
+    _contactId =
+        ModalRoute.of(context)?.settings.arguments as int? ?? widget.contactId;
   }
 
   void addPictureSnackbar() {
@@ -78,10 +32,14 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final contact = _contactId != null
+        ? ref.watch(contactDetailFinderProvider(_contactId!))
+        : null;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _editingContact != null ? 'Update contact' : 'Create Contact',
+          contact != null ? 'Update contact' : 'Create Contact',
           style: TextStyle(
             color: textPrimary,
             fontSize: 20,
@@ -90,7 +48,7 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: _saveForm,
+            onPressed: () => _saveFormFunction?.call(),
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -128,18 +86,10 @@ class _AddNewContactScreenState extends ConsumerState<AddEditContactScreen> {
               ),
               SizedBox(height: 50),
               AddEditForm(
-                formKey: _formKey,
-                initialName: _name,
-                initialEmail: _email,
-                initialNumber: _number,
-                initialCountryCode: _countryCode,
-                onNameSaved: (value) => _name = value ?? '',
-                onEmailSaved: (value) => _email = value ?? '',
-                onNumberSaved: (result) {
-                  _number = result.number;
-                  _flag = result.country?.flag ?? '';
-                  _countryCode = result.country?.code ?? '';
-                },
+                contactId: _contactId,
+                onSaved: () => Navigator.of(context).pop(),
+                onSaveCallback: (saveFunction) =>
+                    _saveFormFunction = saveFunction,
               ),
             ],
           ),
